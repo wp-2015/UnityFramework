@@ -1,0 +1,15 @@
+{
+    "name": "dotNetty-kcp",
+    "references": [
+        "GUID:681bb2c8de2a3f8438d0356b3a1620a4"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

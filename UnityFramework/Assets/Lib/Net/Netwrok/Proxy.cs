@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Google.Protobuf;
+using Protocol;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,5 +14,13 @@ namespace Netwrok
         {
             NetworkManager.SendMessage(packet);
         }
-    }
+
+        public PacketEntity<T> CreatePacket<T>(MSGTYPE msgType) where T : IMessage, new()
+        {
+            var packet = ObjectPool<PacketEntity<T>>.Instance.Get();
+            packet.ID = (short)msgType;
+            packet.message = Activator.CreateInstance<T>();
+            return packet;
+        }
+}
 }

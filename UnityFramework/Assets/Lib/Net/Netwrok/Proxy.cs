@@ -10,6 +10,12 @@ namespace Netwrok
 {
     public class Proxy
     {
+        
+        protected void AddServerListener(MSGTYPE type, Action<IMessage> handle)
+        {
+            ServerListener.AddHandle(type, handle);
+        }
+
         public void SendSocket(Packet packet)
         {
             NetworkManager.SendMessage(packet);

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,7 +13,7 @@ namespace Netwrok
 {
     //TODO:取消掉中间Stream，但是要保证发送的时候不会往Stream中写入,需要做实验是否Socket.BeginSend可以在一帧内执行
     //TODO:确认Socket.BeginSend执行后Stream的变化包括Length和Position
-    public class NetwrokChannel
+    public class NetworkChannel
     {
         //Socket
         protected Socket Socket;
@@ -28,9 +29,10 @@ namespace Netwrok
         /***************************************接收使用**********************************/
         private MemoryStream memoryStreamReceive = new MemoryStream(DefaultBufferLength);
 
-        public NetwrokChannel()
+        public NetworkChannel(IPAddress ipAddress, int port)
         {
             memoryStreamSend.Position = 0;
+            Socket = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
         }
 
         public void Send(Packet packet)

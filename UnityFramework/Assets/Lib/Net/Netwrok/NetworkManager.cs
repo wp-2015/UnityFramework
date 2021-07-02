@@ -2,23 +2,48 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Netwrok
 {
-    public class NetworkManager
+    public static class NetworkManager
     {
-        private static NetwrokChannel channel;
+        private static Dictionary<string, NetworkChannel> dicNetworkChannel = new Dictionary<string, NetworkChannel>();
 
-        public void CreateNetworkChannel()
+        public static void Connect(string channelName, string ip, int port, bool isIpHostName = false)
         {
-            channel = new NetwrokChannel();
+            if(dicNetworkChannel.TryGetValue(channelName, out NetworkChannel channel))
+            {
+                return;
+            }
+
+            IPAddress ipAddress;
+            if (isIpHostName)
+            {
+                IPHostEntry host = Dns.GetHostByName(ip);
+                ipAddress = host.AddressList[0];
+            }
+            else
+            {
+                ipAddress = IPAddress.Parse(ip);
+            }
+
+            dicNetworkChannel[channelName] = new NetworkChannel(ipAddress, port);
         }
 
-        public static void SendMessage(Packet packet)
+        public static void SendMessage(string channelName, Packet packet)
         {
-            channel.Send(packet);
+            dicNetworkChannel[channelName].Send(packet);
+        }
+
+        public static void Update()
+        {
+            foreach(var channel in dicNetworkChannel)
+            {
+                channel.Value.Update();
+            }
         }
     }
 }

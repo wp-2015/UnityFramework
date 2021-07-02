@@ -38,10 +38,7 @@ public class ProtobufHelper
                 temp = temp.Replace("\t", "");
                 temp = temp.Replace(" ", "");
                 temp = temp.Replace("_", "");
-                Debug.LogError(temp);
                 string[] splits = temp.Split('=');
-                Debug.LogError(splits[0]);
-                Debug.LogError(lineText);
                 types += string.Format(lineText,"{", splits[0], splits[0].Replace("Mt", ""), "}") + '\n';
             }
         }

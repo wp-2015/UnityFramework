@@ -132,7 +132,8 @@ namespace Netwrok
             //message
             byte[] messageBytes = new byte[messageSize - 6];
             memoryStreamReceive.Read(messageBytes, 0, messageBytes.Length);
-            //ServerListener.Handler((MSGTYPE)id, )
+
+            ServerListener.Handler((MSGTYPE)id, messageBytes);
             return true;
         }
 

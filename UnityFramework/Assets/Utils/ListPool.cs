@@ -5,8 +5,7 @@ using UnityEngine;
 public static class ListPool<T>
 {
     // Object pool to avoid allocations.
-    private static readonly ObjectPool<List<T>> s_ListPool = new ObjectPool<List<T>>(null, Clear);
-    static void Clear(List<T> l) { l.Clear(); }
+    private static readonly ObjectPool<List<T>> s_ListPool = new ObjectPool<List<T>>();
 
     public static List<T> Get()
     {

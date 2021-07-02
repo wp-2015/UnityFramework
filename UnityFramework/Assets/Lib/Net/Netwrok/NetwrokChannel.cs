@@ -1,4 +1,5 @@
 ﻿using Google.Protobuf;
+using Protocol;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -131,13 +132,12 @@ namespace Netwrok
             //message
             byte[] messageBytes = new byte[messageSize - 6];
             memoryStreamReceive.Read(messageBytes, 0, messageBytes.Length);
-
+            //ServerListener.Handler((MSGTYPE)id, )
             return true;
         }
 
         /*************************************************************接收数据*************************************************************/
         #endregion
-
 
         #region Socket
         /*************************************************************Socket*************************************************************/

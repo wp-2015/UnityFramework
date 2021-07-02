@@ -16,11 +16,11 @@ namespace Protocol {
     /// <summary>
     ///登录
     /// </summary>
-    C2StestMessage = 0,
+    MtC2STestMessage = 0,
     /// <summary>
     ///登录返回
     /// </summary>
-    S2CtestMessage = 10000,
+    MtS2CTestMessage = 10000,
   }
 
   #endregion

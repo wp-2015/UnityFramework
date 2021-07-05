@@ -1,6 +1,7 @@
 package main
 
 import (
+	"GameServer/src/Demo"
 	"GameServer/ziface"
 	"GameServer/znet"
 	"fmt"
@@ -17,10 +18,7 @@ func (this *TestRouter) Handle(request ziface.IRequest)  {
 func main() {
 	fmt.Println("asdasd")
 	s := znet.NewServer()
-
-	//2 配置路由
-	s.AddRouter(0, &TestRouter{})
-
+	Demo.AddHandle(s)
 	//3 开启服务
 	s.Serve()
 }

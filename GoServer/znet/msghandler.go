@@ -1,27 +1,28 @@
 package znet
 
 import (
-	"fmt"
-	"strconv"
-
 	"GameServer/utils"
 	"GameServer/ziface"
+	"GameServer/zlog"
+	"fmt"
 )
 
 // MsgHandle -
 type MsgHandle struct {
-	Apis           map[uint32]ziface.IRouter //存放每个MsgID 所对应的处理方法的map属性
+	//Apis           map[uint32]ziface.IRouter //存放每个MsgID 所对应的处理方法的map属性
 	WorkerPoolSize uint32                    //业务工作Worker池的数量
 	TaskQueue      []chan ziface.IRequest    //Worker负责取任务的消息队列
+	FuncApis		map[uint16]func(request ziface.IRequest)
 }
 
 //NewMsgHandle 创建MsgHandle
 func NewMsgHandle() *MsgHandle {
 	return &MsgHandle{
-		Apis:           make(map[uint32]ziface.IRouter),
+		//Apis:           make(map[uint32]ziface.IRouter),
 		WorkerPoolSize: utils.GlobalObject.WorkerPoolSize,
 		//一个worker对应一个queue
 		TaskQueue: make([]chan ziface.IRequest, utils.GlobalObject.WorkerPoolSize),
+		FuncApis: 		make(map[uint16]func(request ziface.IRequest)),
 	}
 }
 
@@ -39,27 +40,38 @@ func (mh *MsgHandle) SendMsgToTaskQueue(request ziface.IRequest) {
 
 //DoMsgHandler 马上以非阻塞方式处理消息
 func (mh *MsgHandle) DoMsgHandler(request ziface.IRequest) {
-	handler, ok := mh.Apis[request.GetMsgID()]
-	if !ok {
-		fmt.Println("api msgID = ", request.GetMsgID(), " is not FOUND!")
-		return
-	}
+	//handler, ok := mh.Apis[request.GetMsgID()]
+	//if !ok {
+	//	fmt.Println("api msgID = ", request.GetMsgID(), " is not FOUND!")
+	//	return
+	//}
+	//
+	////执行对应处理方法
+	//handler.PreHandle(request)
+	//handler.Handle(request)
+	//handler.PostHandle(request)
 
-	//执行对应处理方法
-	handler.PreHandle(request)
-	handler.Handle(request)
-	handler.PostHandle(request)
+	myFunc, ok := mh.FuncApis[request.GetMsgID()]
+	if !ok {
+		zlog.Warn("api code = ", request.GetMsgID(), "is not found")
+	}else {
+		myFunc(request)
+	}
 }
 
 //AddRouter 为消息添加具体的处理逻辑
-func (mh *MsgHandle) AddRouter(msgID uint32, router ziface.IRouter) {
-	//1 判断当前msg绑定的API处理方法是否已经存在
-	if _, ok := mh.Apis[msgID]; ok {
-		panic("repeated api , msgID = " + strconv.Itoa(int(msgID)))
-	}
-	//2 添加msg与api的绑定关系
-	mh.Apis[msgID] = router
-	fmt.Println("Add api msgID = ", msgID)
+//func (mh *MsgHandle) AddRouter(msgID uint32, router ziface.IRouter) {
+//	//1 判断当前msg绑定的API处理方法是否已经存在
+//	if _, ok := mh.Apis[msgID]; ok {
+//		panic("repeated api , msgID = " + strconv.Itoa(int(msgID)))
+//	}
+//	//2 添加msg与api的绑定关系
+//	mh.Apis[msgID] = router
+//	fmt.Println("Add api msgID = ", msgID)
+//}
+
+func (mh *MsgHandle) AddFuncRouter(msgID uint16, mywork func(request ziface.IRequest)){
+	mh.FuncApis[msgID] = mywork
 }
 
 //StartOneWorker 启动一个Worker工作流程

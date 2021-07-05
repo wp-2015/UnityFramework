@@ -45,7 +45,7 @@
     <property name="configurable.Project.GOPATH.is.expanded" value="true" />
     <property name="go.import.settings.migrated" value="true" />
     <property name="go.sdk.automatically.set" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../zinx-master" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../WorkProgram/project-s-server" />
     <property name="settings.editor.selected.configurable" value="go.vgo" />
   </component>
   <component name="RecentsManager">
@@ -111,26 +111,31 @@
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
     <state x="721" y="180" key="#go_build_main.go/0.0.2048.1112/2560.0.2048.1112@0.0.2048.1112" timestamp="1624613013467" />
-    <state x="805" y="311" key="FileChooserDialogImpl" timestamp="1624847597247">
-      <screen x="0" y="0" width="2048" height="1112" />
+    <state x="3365" y="311" key="FileChooserDialogImpl" timestamp="1625472615427">
+      <screen x="2560" y="0" width="2048" height="1112" />
     </state>
     <state x="805" y="311" key="FileChooserDialogImpl/0.0.2048.1112/2560.0.2048.1112@0.0.2048.1112" timestamp="1624847597247" />
-    <state width="2005" height="261" key="GridCell.Tab.0.bottom" timestamp="1624874207471">
-      <screen x="0" y="0" width="2048" height="1112" />
+    <state x="3365" y="311" key="FileChooserDialogImpl/0.0.2048.1112/2560.0.2048.1112@2560.0.2048.1112" timestamp="1625472615427" />
+    <state width="2005" height="261" key="GridCell.Tab.0.bottom" timestamp="1625481299425">
+      <screen x="2560" y="0" width="2048" height="1112" />
     </state>
     <state width="2005" height="261" key="GridCell.Tab.0.bottom/0.0.2048.1112/2560.0.2048.1112@0.0.2048.1112" timestamp="1624874207471" />
-    <state width="2005" height="261" key="GridCell.Tab.0.center" timestamp="1624874207470">
-      <screen x="0" y="0" width="2048" height="1112" />
+    <state width="2005" height="261" key="GridCell.Tab.0.bottom/0.0.2048.1112/2560.0.2048.1112@2560.0.2048.1112" timestamp="1625481299425" />
+    <state width="2005" height="261" key="GridCell.Tab.0.center" timestamp="1625481299425">
+      <screen x="2560" y="0" width="2048" height="1112" />
     </state>
     <state width="2005" height="261" key="GridCell.Tab.0.center/0.0.2048.1112/2560.0.2048.1112@0.0.2048.1112" timestamp="1624874207470" />
-    <state width="2005" height="261" key="GridCell.Tab.0.left" timestamp="1624874207463">
-      <screen x="0" y="0" width="2048" height="1112" />
+    <state width="2005" height="261" key="GridCell.Tab.0.center/0.0.2048.1112/2560.0.2048.1112@2560.0.2048.1112" timestamp="1625481299425" />
+    <state width="2005" height="261" key="GridCell.Tab.0.left" timestamp="1625481299425">
+      <screen x="2560" y="0" width="2048" height="1112" />
     </state>
     <state width="2005" height="261" key="GridCell.Tab.0.left/0.0.2048.1112/2560.0.2048.1112@0.0.2048.1112" timestamp="1624874207463" />
-    <state width="2005" height="261" key="GridCell.Tab.0.right" timestamp="1624874207471">
-      <screen x="0" y="0" width="2048" height="1112" />
+    <state width="2005" height="261" key="GridCell.Tab.0.left/0.0.2048.1112/2560.0.2048.1112@2560.0.2048.1112" timestamp="1625481299425" />
+    <state width="2005" height="261" key="GridCell.Tab.0.right" timestamp="1625481299425">
+      <screen x="2560" y="0" width="2048" height="1112" />
     </state>
     <state width="2005" height="261" key="GridCell.Tab.0.right/0.0.2048.1112/2560.0.2048.1112@0.0.2048.1112" timestamp="1624874207471" />
+    <state width="2005" height="261" key="GridCell.Tab.0.right/0.0.2048.1112/2560.0.2048.1112@2560.0.2048.1112" timestamp="1625481299425" />
     <state width="2005" height="376" key="GridCell.Tab.1.bottom" timestamp="1624614636701">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
@@ -151,10 +156,15 @@
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
     <state x="962" y="210" key="SettingsEditor/0.0.2048.1112/2560.0.2048.1112@0.0.2048.1112" timestamp="1624847351289" />
-    <state x="1175" y="580" width="600" height="532" key="find.popup" timestamp="1624849719140">
-      <screen x="0" y="0" width="2048" height="1112" />
+    <state width="498" height="446" key="SwitcherDM" timestamp="1625479367619">
+      <screen x="2560" y="0" width="2048" height="1112" />
+    </state>
+    <state width="498" height="446" key="SwitcherDM/0.0.2048.1112/2560.0.2048.1112@2560.0.2048.1112" timestamp="1625479367619" />
+    <state x="3735" y="580" width="600" height="532" key="find.popup" timestamp="1625473647077">
+      <screen x="2560" y="0" width="2048" height="1112" />
     </state>
     <state x="1175" y="580" width="600" height="532" key="find.popup/0.0.2048.1112/2560.0.2048.1112@0.0.2048.1112" timestamp="1624849719140" />
+    <state x="3735" y="580" width="600" height="532" key="find.popup/0.0.2048.1112/2560.0.2048.1112@2560.0.2048.1112" timestamp="1625473647077" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

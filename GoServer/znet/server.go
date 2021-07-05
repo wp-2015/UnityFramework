@@ -141,8 +141,12 @@ func (s *Server) Serve() {
 }
 
 //AddRouter 路由功能：给当前服务注册一个路由业务方法，供客户端链接处理使用
-func (s *Server) AddRouter(msgID uint32, router ziface.IRouter) {
-	s.msgHandler.AddRouter(msgID, router)
+//func (s *Server) AddRouter(msgID uint32, router ziface.IRouter) {
+//	s.msgHandler.AddRouter(msgID, router)
+//}
+
+func(s *Server) AddFuncRouter(msgID uint16, funcRouter func(request ziface.IRequest)){
+	s.msgHandler.AddFuncRouter(msgID, funcRouter)
 }
 
 //GetConnMgr 得到链接管理

@@ -33,6 +33,7 @@ namespace Netwrok
         {
             memoryStreamSend.Position = 0;
             Socket = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            Socket.BeginConnect(ipAddress, port, null, null);
         }
 
         public void Send(Packet packet)

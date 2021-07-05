@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Netwrok
 {
-    public class Proxy
+    public class Proxy<T> : Singleton_CSharp<T> where T : class, new()
     {
-        
+        protected string ChannelName = "Main";
         protected void AddServerListener(MSGTYPE type, Action<IMessage> handle)
         {
             ServerListener.AddHandle(type, handle);
@@ -18,7 +18,7 @@ namespace Netwrok
 
         public void SendSocket(Packet packet)
         {
-            NetworkManager.SendMessage(packet);
+            NetworkManager.SendMessage(ChannelName, packet);
         }
 
         public PacketEntity<T> CreatePacket<T>(MSGTYPE msgType) where T : IMessage, new()

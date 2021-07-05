@@ -3,7 +3,7 @@ using Netwrok;
 using Protocol;
 using UnityEngine;
 
-public class ChatProxy : Proxy
+public class ChatProxy : Proxy<ChatProxy>
 {
     public ChatProxy()
     {

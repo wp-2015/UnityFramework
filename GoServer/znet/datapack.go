@@ -1,15 +1,15 @@
 package znet
 
 import (
+	"GameServer/utils"
+	"GameServer/ziface"
 	"bytes"
 	"encoding/binary"
 	"errors"
-
-	"GameServer/utils"
-	"GameServer/ziface"
+	"fmt"
 )
 
-var defaultHeaderLen uint32 = 8
+var defaultHeaderLen uint32 = 6
 
 //DataPack 封包拆包类实例，暂时不需要成员
 type DataPack struct{}
@@ -21,7 +21,7 @@ func NewDataPack() ziface.Packet {
 
 //GetHeadLen 获取包头长度方法
 func (dp *DataPack) GetHeadLen() uint32 {
-	//ID uint32(4字节) +  DataLen uint32(4字节)
+	//ID unit16(2字节) +  DataLen uint32(4字节)
 	return defaultHeaderLen
 }
 
@@ -61,11 +61,12 @@ func (dp *DataPack) Unpack(binaryData []byte) (ziface.IMessage, error) {
 		return nil, err
 	}
 
+	fmt.Println("msg.DataLen+++++", msg.DataLen)
 	//读msgID
 	if err := binary.Read(dataBuff, binary.LittleEndian, &msg.ID); err != nil {
 		return nil, err
 	}
-
+	fmt.Println("msg.ID+++++", msg.ID)
 	//判断dataLen的长度是否超出我们允许的最大包长度
 	if utils.GlobalObject.MaxPacketSize > 0 && msg.DataLen > utils.GlobalObject.MaxPacketSize {
 		return nil, errors.New("too large msg data received")

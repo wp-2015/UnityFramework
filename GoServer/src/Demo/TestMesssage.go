@@ -29,4 +29,14 @@ func C2STestMessage(request ziface.IRequest)  {
 		zlog.Error("error")
 	}
 	fmt.Println("id = ", c2sTestMessage.ID)
+
+	//s2dPacket := new(protocol.S2CTestMessage)
+	//
+	//s2dPacket.LongID = 100
+	//s2dPacket.Sz = "1234654324345"
+	//
+	//data, err := proto.Marshal(s2dPacket)
+	//code := uint16(protocol.MSGTYPE_Mt_S2C_TestMessage)
+	//request.GetConnection().SendBuffMsg(code, data)
 }
+

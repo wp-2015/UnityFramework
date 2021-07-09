@@ -30,7 +30,10 @@ namespace Netwrok
                 ipAddress = IPAddress.Parse(ip);
             }
 
-            dicNetworkChannel[channelName] = new NetworkChannel(ipAddress, port);
+            dicNetworkChannel[channelName] = new NetworkChannel(ipAddress, port, ()=> 
+            {
+                dicNetworkChannel.Remove(channelName);
+            });
         }
 
         public static void SendMessage(string channelName, Packet packet)

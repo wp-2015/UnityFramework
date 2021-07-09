@@ -104,12 +104,10 @@ func (c *Connection) StartReader() {
 
 			//读取客户端的Msg head
 			headData := make([]byte, c.TCPServer.Packet().GetHeadLen())
-			fmt.Println("++++++++++5   ", c.TCPServer.Packet().GetHeadLen())
 			if _, err := io.ReadFull(c.Conn, headData); err != nil {
 				fmt.Println("read msg head error ", err)
 				return
 			}
-			fmt.Println("++++++++++6")
 			//fmt.Printf("read headData %+v\n", headData)
 
 			//拆包，得到msgID 和 datalen 放在msg中
@@ -122,16 +120,13 @@ func (c *Connection) StartReader() {
 			//根据 dataLen 读取 data，放在msg.Data中
 			var data []byte
 			if msg.GetDataLen() > 0 {
-				fmt.Println("++++++++++2")
 				data = make([]byte, msg.GetDataLen())
-				fmt.Print("++++++++++3   ", msg.GetDataLen())
 
 				if _, err := io.ReadFull(c.Conn, data); err != nil {
 					fmt.Println("read msg data error ", err)
 					return
 				}
 			}
-			fmt.Println("++++++++++4")
 			msg.SetData(data)
 
 			//得到当前客户端请求的Request数据

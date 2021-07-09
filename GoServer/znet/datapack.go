@@ -6,7 +6,6 @@ import (
 	"bytes"
 	"encoding/binary"
 	"errors"
-	"fmt"
 )
 
 var defaultHeaderLen uint32 = 6
@@ -61,12 +60,11 @@ func (dp *DataPack) Unpack(binaryData []byte) (ziface.IMessage, error) {
 		return nil, err
 	}
 
-	fmt.Println("msg.DataLen+++++", msg.DataLen)
 	//读msgID
 	if err := binary.Read(dataBuff, binary.LittleEndian, &msg.ID); err != nil {
 		return nil, err
 	}
-	fmt.Println("msg.ID+++++", msg.ID)
+
 	//判断dataLen的长度是否超出我们允许的最大包长度
 	if utils.GlobalObject.MaxPacketSize > 0 && msg.DataLen > utils.GlobalObject.MaxPacketSize {
 		return nil, errors.New("too large msg data received")

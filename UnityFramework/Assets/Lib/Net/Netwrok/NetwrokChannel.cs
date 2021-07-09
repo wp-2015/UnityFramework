@@ -106,17 +106,16 @@ namespace Netwrok
             CachedStream.Position = 0L;
             CachedStream.SetLength(0);
             //获得ID字节数组
-            byte[] idBytes = BitConverter.GetBytes(6542);//packet.ID
+            byte[] idBytes = BitConverter.GetBytes(packet.ID);
             //获得消息
             IMessage message = packet.message;
             //获得消息长度字节数组
-            int messageSize = message.CalculateSize() + 6;
+            int messageSize = message.CalculateSize();
             byte[] messageSizeBytes = BitConverter.GetBytes(messageSize);
             //将消息总长度写入缓存
-            CachedStream.Write(messageSizeBytes, 0, message.CalculateSize());
-            Debug.LogError("message.CalculateSize()+++++++++" + message.CalculateSize());
+            CachedStream.Write(messageSizeBytes, 0, 4);
             //将ID写入缓存
-            CachedStream.Write(idBytes, 0, idBytes.Length);
+            CachedStream.Write(idBytes, 0, 2);
             //将消息内容写入缓存流
             message.WriteTo(CachedStream);
             CachedStream.WriteTo(memoryStreamSend);

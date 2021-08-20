@@ -47,7 +47,7 @@
     <property name="go.sdk.automatically.set" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../WorkProgram/project-s-server" />
     <property name="restartRequiresConfirmation" value="false" />
-    <property name="settings.editor.selected.configurable" value="go.vgo" />
+    <property name="settings.editor.selected.configurable" value="reference.settings.deploy.options" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -104,10 +104,10 @@
     </environment>
   </component>
   <component name="WindowStateProjectService">
-    <state x="479" y="211" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1624612617002">
+    <state x="479" y="211" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1626853878590">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state x="479" y="211" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.2048.1112/2560.0.2048.1112@0.0.2048.1112" timestamp="1624612617002" />
+    <state x="479" y="211" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.2048.1112/2560.0.2048.1112@0.0.2048.1112" timestamp="1626853878590" />
     <state x="721" y="180" key="#go_build_main.go" timestamp="1624613013467">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
@@ -157,10 +157,10 @@
     </state>
     <state width="2005" height="376" key="GridCell.Tab.1.right/0.0.2048.1112/2560.0.2048.1112@0.0.2048.1112" timestamp="1624614636701" />
     <state width="2005" height="376" key="GridCell.Tab.1.right/0.0.2048.1112/2560.0.2048.1112@2560.0.2048.1112" timestamp="1625733049363" />
-    <state x="962" y="210" key="SettingsEditor" timestamp="1624847351289">
+    <state x="962" y="210" key="SettingsEditor" timestamp="1626853799793">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state x="962" y="210" key="SettingsEditor/0.0.2048.1112/2560.0.2048.1112@0.0.2048.1112" timestamp="1624847351289" />
+    <state x="962" y="210" key="SettingsEditor/0.0.2048.1112/2560.0.2048.1112@0.0.2048.1112" timestamp="1626853799793" />
     <state width="498" height="446" key="SwitcherDM" timestamp="1625726033794">
       <screen x="2560" y="0" width="2048" height="1112" />
     </state>

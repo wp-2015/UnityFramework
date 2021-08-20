@@ -7,15 +7,26 @@ namespace ABHelper
 {
     public class AssetManager
     {
-        public static UnityEngine.Object Load(string path)
+//        public static UnityEngine.Object Load(string path)
+//        {
+//#if UNITY_EDITOR
+//            if(!IsUseAssetBundle)
+//            {
+//                 return Editor.Instantiate<GameObject>(AssetDatabase.LoadAssetAtPath<GameObject>(path));
+//            }
+//#endif
+//            return ABManager.Load(path);
+//        }
+
+        public static T Load<T>(string path) where T : Object
         {
 #if UNITY_EDITOR
-            if(!IsUseAssetBundle)
+            if (!IsUseAssetBundle)
             {
-                 return Editor.Instantiate<GameObject>(AssetDatabase.LoadAssetAtPath<GameObject>(path));
+                return (T)AssetDatabase.LoadAssetAtPath<T>(path);
             }
 #endif
-            return ABManager.Load(path);
+            return default(T);// ABManager.Load(path);
         }
 
         public static void UnLoad(string path)

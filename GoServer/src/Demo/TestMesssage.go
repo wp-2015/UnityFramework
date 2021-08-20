@@ -30,7 +30,7 @@ func C2STestMessage(request ziface.IRequest)  {
 	}
 	fmt.Println("id = ", c2sTestMessage.ID)
 
-	//s2dPacket := new(protocol.S2CTestMessage)
+	//s2dPacket := new(protocol.S2CTestMessage)  
 	//
 	//s2dPacket.LongID = 100
 	//s2dPacket.Sz = "1234654324345"

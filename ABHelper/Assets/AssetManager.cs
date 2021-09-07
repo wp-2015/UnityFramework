@@ -7,6 +7,11 @@ namespace ABHelper
 {
     public class AssetManager
     {
+        private static bool bIsUseAssetBundle;
+        public AssetManager()
+        {
+            bIsUseAssetBundle = IsUseAssetBundle;
+        }
 //        public static UnityEngine.Object Load(string path)
 //        {
 //#if UNITY_EDITOR
@@ -21,8 +26,9 @@ namespace ABHelper
         public static T Load<T>(string path) where T : Object
         {
 #if UNITY_EDITOR
-            if (!IsUseAssetBundle)
+            if (!bIsUseAssetBundle)
             {
+                Debug.LogError(path);
                 return (T)AssetDatabase.LoadAssetAtPath<T>(path);
             }
 #endif
@@ -32,7 +38,7 @@ namespace ABHelper
         public static void UnLoad(string path)
         {
 #if UNITY_EDITOR
-            if (IsUseAssetBundle)
+            if (bIsUseAssetBundle)
 #endif
             {
                 ABManager.UnLoad(path);
@@ -42,7 +48,7 @@ namespace ABHelper
         public static void UnLoadAllUnuseAsset()
         {
 #if UNITY_EDITOR
-            if (IsUseAssetBundle)
+            if (bIsUseAssetBundle)
 #endif
             {
                 ABManager.UnLoadUnusefulAssetBundle();
@@ -51,22 +57,22 @@ namespace ABHelper
 
 #if UNITY_EDITOR
         [MenuItem("ABHelper/资源加载方式/使用AssetBundle", true)]
-        public static bool UseBundle()
+        static bool UseBundle()
         {
             return !IsUseAssetBundle && !Application.isPlaying;
         }
         [MenuItem("ABHelper/资源加载方式/使用AssetBundle", false)]
-        public static void UseBundleShow()
+        static void UseBundleShow()
         {
             IsUseAssetBundle = true;
         }
         [MenuItem("ABHelper/资源加载方式/不使用AssetBundle", true)]
-        public static bool NotUseBundle()
+        static bool NotUseBundle()
         {
             return IsUseAssetBundle && !Application.isPlaying;
         }
         [MenuItem("ABHelper/资源加载方式/不使用AssetBundle", false)]
-        public static void NotUseBundleShow()
+        static void NotUseBundleShow()
         {
             IsUseAssetBundle = false;
         }

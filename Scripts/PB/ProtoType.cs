@@ -14,13 +14,25 @@ namespace Protocol {
   /// </summary>
   public enum MSGTYPE {
     /// <summary>
-    ///登录
+    ///C2S测试
     /// </summary>
     MtC2STestMessage = 0,
     /// <summary>
-    ///登录返回
+    ///加入
+    /// </summary>
+    MtC2SJoin = 1,
+    /// <summary>
+    ///S2C测试
     /// </summary>
     MtS2CTestMessage = 10000,
+    /// <summary>
+    ///地图初始化
+    /// </summary>
+    MtS2CMapInit = 10001,
+    /// <summary>
+    ///地图更新
+    /// </summary>
+    MtS2CMapRand = 10002,
   }
 
   #endregion

@@ -19,7 +19,7 @@ namespace Netwrok
         //Socket
         protected Socket Socket;
         //默认字节流长度
-        private const int DefaultBufferLength = 1024 * 64;
+        private const int DefaultBufferLength = 1024;
         private Action closeCB;
 
         /***************************************发送使用**********************************/
@@ -35,9 +35,13 @@ namespace Netwrok
         {
             memoryStreamSend.Position = 0;
             Socket = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-            Socket.BeginConnect(ipAddress, port, null, null);
+            Socket.BeginConnect(ipAddress, port, ConnectCB, null);
 
-            ReceiveAsync();//异步
+        }
+
+        private void ConnectCB(IAsyncResult ar)
+        {
+            //ReceiveAsync();//异步
         }
 
         public void Send(Packet packet)
@@ -62,8 +66,15 @@ namespace Netwrok
                     memoryStreamSend.Position = 0;
                     SendStream();
                 }
+                //ReceiveAsync();//同步
             }
-            //ReceiveSync();//同步
+            //while (Socket.Available > 0)
+            //{
+            //    if (!ReceiveSync())
+            //    {
+            //        break;
+            //    }
+            //}
         }
         #region 发送
         /**********************************************************************发送*********************************************************/
@@ -97,6 +108,7 @@ namespace Netwrok
                 memoryStreamSend.Position = 0;
                 memoryStreamSend.SetLength(0);
             }
+            ReceiveSync();
         }
 
         //预先开辟一个流用来中转数据=>组合到目标流
@@ -127,9 +139,20 @@ namespace Netwrok
         /*************************************************************接收数据*************************************************************/
         private bool ReceiveSync()
         {
+            
             memoryStreamReceive.Position = 0;
-            int bytesReceived = Socket.Receive(memoryStreamReceive.GetBuffer(), 
+            Debug.LogError("4+++++" + Socket.Connected);
+            Debug.LogError("6+++++" + memoryStreamReceive.GetBuffer().Length);
+            var bs = new byte[10000];
+            //int bytesReceived = Socket.Receive(bs);
+
+
+            int bytesReceived = Socket.Receive(memoryStreamReceive.GetBuffer(),
                 (int)memoryStreamReceive.Position, (int)(memoryStreamReceive.Length - memoryStreamReceive.Position), SocketFlags.None);
+            Debug.LogError("5+++++" + Socket.Available);
+            Debug.LogError("1+++++" + bytesReceived);
+            Debug.LogError("2+++++" + memoryStreamReceive.Length);
+            Debug.LogError("3+++++" + memoryStreamReceive.Position);
             if (bytesReceived <= 0)
             {
                 return false;
@@ -153,7 +176,6 @@ namespace Netwrok
             //message
             byte[] messageBytes = new byte[messageSize];
             memoryStreamReceive.Read(messageBytes, 0, messageBytes.Length);
-
             ServerListener.Handler((MSGTYPE)id, messageBytes);
             return true;
         }
@@ -173,12 +195,15 @@ namespace Netwrok
 
         private void ReceiveCallback(IAsyncResult ar)
         {
+            Debug.LogError("1+++++++++++" + (memoryStreamReceive.Length));
+            Debug.LogError("2+++++++++++" + (memoryStreamReceive.Position));
             Socket socket = (Socket)ar.AsyncState;
             int bytesReceived = socket.EndReceive(ar);
+            Debug.LogError("+++++++++++" + bytesReceived);
             if (bytesReceived <= 0)
             {
-                Close();
-                return;
+                //Close();
+                //return;
             }
             memoryStreamReceive.Position += bytesReceived;
             if (memoryStreamReceive.Position < memoryStreamReceive.Length)

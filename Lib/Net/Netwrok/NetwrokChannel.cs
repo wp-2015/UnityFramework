@@ -22,6 +22,8 @@ namespace Netwrok
         private const int DefaultBufferLength = 1024;
         private Action closeCB;
 
+        const int HeadLength = 4;
+
         /***************************************发送使用**********************************/
         //Packet缓存池
         private Queue<Packet> sendPacketPool = new Queue<Packet>();
@@ -33,7 +35,6 @@ namespace Netwrok
 
         public NetworkChannel(IPAddress ipAddress, int port, Action closeCB)
         {
-            memoryStreamSend.Position = 0;
             Socket = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             Socket.BeginConnect(ipAddress, port, ConnectCB, null);
 
@@ -42,6 +43,13 @@ namespace Netwrok
         private void ConnectCB(IAsyncResult ar)
         {
             //ReceiveAsync();//异步
+            //发送需要用到的初始化
+            memoryStreamSend.Position = 0;
+            //接收需要用到的初始化
+            memoryStreamReceive.Position = 0;
+            bIsReceiveHead = true;
+            memoryStreamReceive.SetLength(HeadLength);
+            ReceiveAsync();
         }
 
         public void Send(Packet packet)
@@ -108,7 +116,6 @@ namespace Netwrok
                 memoryStreamSend.Position = 0;
                 memoryStreamSend.SetLength(0);
             }
-            ReceiveSync();
         }
 
         //预先开辟一个流用来中转数据=>组合到目标流
@@ -125,7 +132,7 @@ namespace Netwrok
             int messageSize = message.CalculateSize();
             byte[] messageSizeBytes = BitConverter.GetBytes(messageSize);
             //将消息总长度写入缓存
-            CachedStream.Write(messageSizeBytes, 0, 4);
+            CachedStream.Write(messageSizeBytes, 0, HeadLength);
             //将ID写入缓存
             CachedStream.Write(idBytes, 0, 2);
             //将消息内容写入缓存流
@@ -137,85 +144,115 @@ namespace Netwrok
 
         #region 接收
         /*************************************************************接收数据*************************************************************/
-        private bool ReceiveSync()
-        {
-            
-            memoryStreamReceive.Position = 0;
-            Debug.LogError("4+++++" + Socket.Connected);
-            Debug.LogError("6+++++" + memoryStreamReceive.GetBuffer().Length);
-            var bs = new byte[10000];
-            //int bytesReceived = Socket.Receive(bs);
-
-
-            int bytesReceived = Socket.Receive(memoryStreamReceive.GetBuffer(),
-                (int)memoryStreamReceive.Position, (int)(memoryStreamReceive.Length - memoryStreamReceive.Position), SocketFlags.None);
-            Debug.LogError("5+++++" + Socket.Available);
-            Debug.LogError("1+++++" + bytesReceived);
-            Debug.LogError("2+++++" + memoryStreamReceive.Length);
-            Debug.LogError("3+++++" + memoryStreamReceive.Position);
-            if (bytesReceived <= 0)
-            {
-                return false;
-            }
-            memoryStreamReceive.Position += bytesReceived;
-
-            if (memoryStreamReceive.Position < memoryStreamReceive.Length)
-            {
-                return false;
-            }
-            //接收数据完毕
-            memoryStreamReceive.Position = 0L;
-            //大小
-            byte[] messageSizeBytes = new byte[4];
-            memoryStreamReceive.Read(messageSizeBytes, 0, 4);
-            int messageSize = BitConverter.ToInt32(messageSizeBytes, 0);
-            //ID
-            byte[] messageIdBytes = new byte[2];
-            memoryStreamReceive.Read(messageIdBytes, 0, 2);
-            int id = BitConverter.ToInt32(messageIdBytes, 0);
-            //message
-            byte[] messageBytes = new byte[messageSize];
-            memoryStreamReceive.Read(messageBytes, 0, messageBytes.Length);
-            ServerListener.Handler((MSGTYPE)id, messageBytes);
-            return true;
-        }
-
+        bool bIsReceiveHead = true;
         private void ReceiveAsync()
         {
             try
             {
-                Socket.BeginReceive(memoryStreamReceive.GetBuffer(), (int)memoryStreamReceive.Position,
-                (int)(memoryStreamReceive.Length - memoryStreamReceive.Position), SocketFlags.None, ReceiveCallback, Socket);
+                Socket.BeginReceive(memoryStreamReceive.GetBuffer(), 
+                                        (int)memoryStreamReceive.Position,
+                                        (int)(memoryStreamReceive.Length - memoryStreamReceive.Position),
+                                        SocketFlags.None, ReceiveCallback, Socket);
             }
             catch(Exception e)
             {
-                
+                Debug.LogError(e);
             }
         }
 
         private void ReceiveCallback(IAsyncResult ar)
         {
-            Debug.LogError("1+++++++++++" + (memoryStreamReceive.Length));
-            Debug.LogError("2+++++++++++" + (memoryStreamReceive.Position));
             Socket socket = (Socket)ar.AsyncState;
             int bytesReceived = socket.EndReceive(ar);
-            Debug.LogError("+++++++++++" + bytesReceived);
             if (bytesReceived <= 0)
             {
+                Debug.LogError("+++++ReceiveCallback bytesReceived 《= 0");
                 //Close();
                 //return;
             }
             memoryStreamReceive.Position += bytesReceived;
+
+            Debug.LogError("Position+++++++++++" + memoryStreamReceive.Position + "    memoryStreamReceive.Length  " + memoryStreamReceive.Length);
+            //信息在一次流传输中没有完成
             if (memoryStreamReceive.Position < memoryStreamReceive.Length)
             {
                 ReceiveAsync();
                 return;
             }
+
             memoryStreamReceive.Position = 0L;
+            //一条协议的解析分为两次，一次为长度，一次为协议内容
+            //长度解析
+            if (bIsReceiveHead)
+            {
+                //大小
+                byte[] messageSizeBytes = new byte[HeadLength];
+                memoryStreamReceive.Read(messageSizeBytes, 0, HeadLength);
+                int messageSize = BitConverter.ToInt32(messageSizeBytes, 0);
+                Debug.LogError("messageSize+++++++++++" + messageSize);
+                memoryStreamReceive.SetLength(messageSize + 2);
+                bIsReceiveHead = false;
+            }
+            //内容解析
+            else
+            {
+                //ID
+                byte[] messageIdBytes = new byte[2];
+                memoryStreamReceive.Read(messageIdBytes, 0, 2);
+                for(int i = 0; i < 2; i++)
+                {
+                    Debug.LogError("666++++" + messageIdBytes[i]);
+                }
+                var id = BitConverter.ToInt16(messageIdBytes, 0);
+                Debug.LogError("id+++++++++++" + id);
+                //message
+                byte[] messageBytes = new byte[memoryStreamReceive.Length - 2];
+                memoryStreamReceive.Read(messageBytes, 0, messageBytes.Length);
+                ServerListener.Handler((MSGTYPE)id, messageBytes);
+                memoryStreamReceive.SetLength(HeadLength);
+                bIsReceiveHead = true;
+            }
 
-
+            memoryStreamReceive.Position = 0L;
             ReceiveAsync();
         }
+
+        //private bool ReceiveSync()
+        //{
+
+        //    memoryStreamReceive.Position = 0;
+        //    //var bs = new byte[10000];
+        //    //int bytesReceived = Socket.Receive(bs);
+
+
+        //    int bytesReceived = Socket.Receive(memoryStreamReceive.GetBuffer(),
+        //        (int)memoryStreamReceive.Position, (int)(memoryStreamReceive.Length - memoryStreamReceive.Position), SocketFlags.None);
+        //    if (bytesReceived <= 0)
+        //    {
+        //        return false;
+        //    }
+        //    memoryStreamReceive.Position += bytesReceived;
+
+        //    if (memoryStreamReceive.Position < memoryStreamReceive.Length)
+        //    {
+        //        return false;
+        //    }
+        //    //接收数据完毕
+        //    memoryStreamReceive.Position = 0L;
+        //    //大小
+        //    byte[] messageSizeBytes = new byte[4];
+        //    memoryStreamReceive.Read(messageSizeBytes, 0, 4);
+        //    int messageSize = BitConverter.ToInt32(messageSizeBytes, 0);
+        //    //ID
+        //    byte[] messageIdBytes = new byte[2];
+        //    memoryStreamReceive.Read(messageIdBytes, 0, 2);
+        //    int id = BitConverter.ToInt32(messageIdBytes, 0);
+        //    //message
+        //    byte[] messageBytes = new byte[messageSize];
+        //    memoryStreamReceive.Read(messageBytes, 0, messageBytes.Length);
+        //    ServerListener.Handler((MSGTYPE)id, messageBytes);
+        //    return true;
+        //}
 
         /*************************************************************接收数据*************************************************************/
         #endregion

@@ -56,7 +56,13 @@ public static class MessageTypeMap
     {" + '\n' + '\t' + '\t'
                     + types + '\n' +
      "\t" +   @"};"+"\n" + "}";
-        File.WriteAllText(Application.dataPath + @"/Scripts/PB/MessageTypeMap.cs", text);
+        var pathMessageTypeMap = Application.dataPath + @"/Scripts/PB/";
+        if (!Directory.Exists(pathMessageTypeMap))
+        {
+            Directory.CreateDirectory(pathMessageTypeMap);
+        }
+
+        File.WriteAllText(pathMessageTypeMap + "MessageTypeMap.cs", text); //UnityFramework\Scripts\PB
     }
 
     private static string _setTextTransform(string str)

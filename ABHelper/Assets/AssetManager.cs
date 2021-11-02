@@ -28,7 +28,6 @@ namespace ABHelper
 #if UNITY_EDITOR
             if (!bIsUseAssetBundle)
             {
-                Debug.LogError(path);
                 return (T)AssetDatabase.LoadAssetAtPath<T>(path);
             }
 #endif

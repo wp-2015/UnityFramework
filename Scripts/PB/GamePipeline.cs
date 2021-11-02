@@ -233,12 +233,36 @@ namespace Protocol {
       }
     }
 
-    private static readonly pb::FieldCodec<int> _repeated_mapRandSeeds_codec
-        = pb::FieldCodec.ForInt32(18);
-    private pbc::RepeatedField<int> mapRandSeeds_ = new pbc::RepeatedField<int>();
-    public pbc::RepeatedField<int> MapRandSeeds {
+    private static readonly pb::FieldCodec<long> _repeated_mapRandSeeds_codec
+        = pb::FieldCodec.ForInt64(18);
+    private pbc::RepeatedField<long> mapRandSeeds_ = new pbc::RepeatedField<long>();
+    public pbc::RepeatedField<long> MapRandSeeds {
       get { return mapRandSeeds_; }
       set { mapRandSeeds_ = value; }
+    }
+
+    private int mapOldestLinePos_;
+    public int MapOldestLinePos {
+      get { return mapOldestLinePos_; }
+      set {
+        mapOldestLinePos_ = value;
+      }
+    }
+
+    private int mapLineHeight_;
+    public int MapLineHeight {
+      get { return mapLineHeight_; }
+      set {
+        mapLineHeight_ = value;
+      }
+    }
+
+    private int mapLineInterval_;
+    public int MapLineInterval {
+      get { return mapLineInterval_; }
+      set {
+        mapLineInterval_ = value;
+      }
     }
 
     public void WriteTo(pb::CodedOutputStream output) {
@@ -247,6 +271,18 @@ namespace Protocol {
         output.WriteInt32(MapRow);
       }
       mapRandSeeds_.WriteTo(output, _repeated_mapRandSeeds_codec);
+      if (MapOldestLinePos != 0) {
+        output.WriteRawTag(24);
+        output.WriteInt32(MapOldestLinePos);
+      }
+      if (MapLineHeight != 0) {
+        output.WriteRawTag(32);
+        output.WriteInt32(MapLineHeight);
+      }
+      if (MapLineInterval != 0) {
+        output.WriteRawTag(40);
+        output.WriteInt32(MapLineInterval);
+      }
     }
 
     public int CalculateSize() {
@@ -255,12 +291,24 @@ namespace Protocol {
         size += 1 + pb::CodedOutputStream.ComputeInt32Size(MapRow);
       }
       size += mapRandSeeds_.CalculateSize(_repeated_mapRandSeeds_codec);
+      if (MapOldestLinePos != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(MapOldestLinePos);
+      }
+      if (MapLineHeight != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(MapLineHeight);
+      }
+      if (MapLineInterval != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(MapLineInterval);
+      }
       return size;
     }
 
     public void MergeFrom(pb::CodedInputStream input) {
       mapRow_ = 0;
       mapRandSeeds_.Clear();
+      mapOldestLinePos_ = 0;
+      mapLineHeight_ = 0;
+      mapLineInterval_ = 0;
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
         switch(tag) {
@@ -274,6 +322,18 @@ namespace Protocol {
           case 18:
           case 16: {
             mapRandSeeds_.AddEntriesFrom(input, _repeated_mapRandSeeds_codec);
+            break;
+          }
+          case 24: {
+            MapOldestLinePos = input.ReadInt32();
+            break;
+          }
+          case 32: {
+            MapLineHeight = input.ReadInt32();
+            break;
+          }
+          case 40: {
+            MapLineInterval = input.ReadInt32();
             break;
           }
         }

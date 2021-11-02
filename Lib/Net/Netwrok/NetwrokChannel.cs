@@ -16,6 +16,11 @@ namespace Netwrok
     //TODO:确认Socket.BeginSend执行后Stream的变化包括Length和Position
     public class NetworkChannel
     {
+        public struct MessageWaitHandleInfo
+        {
+            public int id;
+            public byte[] msg;
+        }
         //Socket
         protected Socket Socket;
         //默认字节流长度
@@ -37,7 +42,6 @@ namespace Netwrok
         {
             Socket = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             Socket.BeginConnect(ipAddress, port, ConnectCB, null);
-
         }
 
         private void ConnectCB(IAsyncResult ar)
@@ -76,13 +80,11 @@ namespace Netwrok
                 }
                 //ReceiveAsync();//同步
             }
-            //while (Socket.Available > 0)
-            //{
-            //    if (!ReceiveSync())
-            //    {
-            //        break;
-            //    }
-            //}
+            while(lMessageWait.Count > 0)
+            {
+                var info = lMessageWait.Dequeue();
+                ServerListener.Handler((MSGTYPE)info.id, info.msg);
+            }
         }
         #region 发送
         /**********************************************************************发送*********************************************************/
@@ -159,7 +161,8 @@ namespace Netwrok
                 Debug.LogError(e);
             }
         }
-
+        //消息都需要主线程处理，因此设置堆栈，在update中处理
+        Queue<MessageWaitHandleInfo> lMessageWait = new Queue<MessageWaitHandleInfo>();
         private void ReceiveCallback(IAsyncResult ar)
         {
             Socket socket = (Socket)ar.AsyncState;
@@ -208,7 +211,8 @@ namespace Netwrok
                 //message
                 byte[] messageBytes = new byte[memoryStreamReceive.Length - 2];
                 memoryStreamReceive.Read(messageBytes, 0, messageBytes.Length);
-                ServerListener.Handler((MSGTYPE)id, messageBytes);
+                lMessageWait.Enqueue(new MessageWaitHandleInfo() { id = id, msg = messageBytes });
+                //ServerListener.Handler((MSGTYPE)id, messageBytes);
                 memoryStreamReceive.SetLength(HeadLength);
                 bIsReceiveHead = true;
             }
